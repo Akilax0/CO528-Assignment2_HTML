@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angle Selector</title>
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        .slider-container, .radio-container, .text-container {
+            margin: 20px;
+        }
+
+        .radio-container label {
+            margin-right: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Text Box -->
+        <div class="text-container">
+            <label for="angleInput">Angle (0 - 360): </label>
+            <input type="number" id="angleInput" value="0" min="0" max="360">
+        </div>
+
+        <!-- Slider -->
+        <div class="slider-container">
+            <input type="range" id="angleSlider" min="0" max="360" value="180">
+        </div>
+
+        <!-- Radio Buttons -->
+        <div class="radio-container">
+            <label><input type="radio" name="angleRadio" value="0"> 0°</label>
+            <label><input type="radio" name="angleRadio" value="45"> 45°</label>
+            <label><input type="radio" name="angleRadio" value="60"> 60°</label>
+            <label><input type="radio" name="angleRadio" value="90"> 90°</label>
+            <label><input type="radio" name="angleRadio" value="180"> 180°</label>
+        </div>
+    </div>
+
+    <script>
+        const angleInput = document.getElementById('angleInput');
+        const angleSlider = document.getElementById('angleSlider');
+        const angleRadios = document.getElementsByName('angleRadio');
+
+        // Update slider and radio buttons when text input changes
+        angleInput.addEventListener('input', () => {
+            let value = parseInt(angleInput.value, 10);
+            if (isNaN(value)) value = 0;
+            value = Math.max(0, Math.min(360, value)); // Clamp value between 0 and 360
+            angleInput.value = value;
+            angleSlider.value = value;
+            updateRadioButtons(value);
+        });
+
+        // Update text input and radio buttons when slider changes
+        angleSlider.addEventListener('input', () => {
+            angleInput.value = angleSlider.value;
+            updateRadioButtons(angleSlider.value);
+        });
+
+        // Update text input and slider when a radio button is selected
+        angleRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                if (radio.checked) {
+                    angleInput.value = radio.value;
+                    angleSlider.value = radio.value;
+                }
+            });
+        });
+
+        // Update radio buttons based on the value
+        function updateRadioButtons(value) {
+            angleRadios.forEach(radio => {
+                radio.checked = (radio.value === value.toString());
+            });
+        }
+    </script>
+</body>
+</html>
